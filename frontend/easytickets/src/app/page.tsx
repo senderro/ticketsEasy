@@ -1,7 +1,5 @@
 import React from 'react';
 import Navbar from './components/Navbar.'; // Ensure correct path and name
-import EmblaCarousel from './components/EmblaCarrossel';
-import EmblaOptionsType from "embla-carousel-react"
 
 const OPTIONS = { loop: true };
 const SLIDE_COUNT = 5;
@@ -12,7 +10,7 @@ const Home: React.FC = () => {
     <div>
       <Navbar />
       <main style={styles.mainContent as React.CSSProperties}>
-        <EmblaCarousel slides={SLIDES} options={OPTIONS} />
+        <h1>carrosel</h1>
       </main>
     </div>
   );
