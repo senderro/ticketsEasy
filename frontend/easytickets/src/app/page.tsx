@@ -1,29 +1,28 @@
-import Navbar from './components/Navbar.';
-import EmblaCarousel from './components/EmblaCarrossel';
-import { EmblaOptionsType } from 'embla-carousel'
-
 import React from 'react';
+import Navbar from './components/Navbar.'; // Ensure correct path and name
+import EmblaCarousel from './components/EmblaCarrossel';
+import EmblaOptionsType from "embla-carousel-react"
 
-const OPTIONS: EmblaOptionsType = { loop: true }
-const SLIDE_COUNT = 5
-const SLIDES = Array.from(Array(SLIDE_COUNT).keys())
+const OPTIONS = { loop: true };
+const SLIDE_COUNT = 5;
+const SLIDES = Array.from(Array(SLIDE_COUNT).keys());
 
-export default function Home() {
+const Home: React.FC = () => {
   return (
     <div>
-  
-      
       <Navbar />
       <main style={styles.mainContent as React.CSSProperties}>
         <EmblaCarousel slides={SLIDES} options={OPTIONS} />
       </main>
     </div>
   );
-}
+};
 
 const styles = {
   mainContent: {
     padding: '20px',
     textAlign: 'center',
-  } as React.CSSProperties, // Casting to React.CSSProperties
+  } as React.CSSProperties,
 };
+
+export default Home;
