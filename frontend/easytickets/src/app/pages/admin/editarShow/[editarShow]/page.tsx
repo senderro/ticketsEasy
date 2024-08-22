@@ -20,7 +20,7 @@ interface Show {
   datashow: string; // Use string para a data, pois o formato é ISO 8601
   artistas: string;
   destaque: boolean;
-  tiposdecadeira: TipoDeCadeira[];
+  tiposDeCadeira: TipoDeCadeira[]; // Alterado para camelCase
 }
 
 export default function EditShowPage() {
@@ -34,7 +34,7 @@ export default function EditShowPage() {
     datashow: '',
     artistas: '',
     destaque: false,
-    tiposdecadeira: [], // Inicializa como um array vazio
+    tiposDeCadeira: [], // Alterado para camelCase
   });
 
   const [newTipoCadeira, setNewTipoCadeira] = useState<Omit<TipoDeCadeira, 'idtipocadeira' | 'idestrangeirashow'>>({
@@ -76,7 +76,7 @@ export default function EditShowPage() {
     const { name, value, type, checked } = e.target;
     setShow({
       ...show,
-      tiposdecadeira: show.tiposdecadeira.map((tipo) =>
+      tiposDeCadeira: show.tiposDeCadeira.map((tipo) =>
         tipo.idtipocadeira === idTipoCadeira
           ? {
               ...tipo,
@@ -98,11 +98,11 @@ export default function EditShowPage() {
   const addTipoCadeira = () => {
     setShow({
       ...show,
-      tiposdecadeira: [
-        ...show.tiposdecadeira,
+      tiposDeCadeira: [
+        ...show.tiposDeCadeira,
         {
-          idtipocadeira: show.tiposdecadeira.length + 1,
-          idestrangeirashow: show.idshow, // Vincula o tipo de cadeira ao ID do show
+          idtipocadeira: show.tiposDeCadeira.length + 1,
+          idestrangeirashow: show.idshow,
           ...newTipoCadeira,
         },
       ],
@@ -132,7 +132,7 @@ export default function EditShowPage() {
       });
       if (response.ok) {
         console.log('Show atualizado com sucesso!');
-        // router.push('/admin/shows'); // Redireciona para a lista de shows ou página desejada
+        // router.push('/admin/shows');
       } else {
         console.error('Erro ao atualizar show:', response.statusText);
       }
@@ -222,16 +222,6 @@ export default function EditShowPage() {
         </div>
 
         <div>
-          <label>Quantidade Compradas:</label>
-          <input
-            type="number"
-            name="quantidadecompradas"
-            value={newTipoCadeira.quantidadecompradas}
-            onChange={handleNewTipoCadeiraChange}
-          />
-        </div>
-
-        <div>
           <label>Preço (em Reais):</label>
           <input
             type="number"
@@ -263,8 +253,8 @@ export default function EditShowPage() {
 
         <h2>Tipos de Cadeira Adicionados:</h2>
         <ul>
-          {show.tiposdecadeira && show.tiposdecadeira.length > 0 ? (
-            show.tiposdecadeira.map((tipo) => (
+          {show.tiposDeCadeira && show.tiposDeCadeira.length > 0 ? (
+            show.tiposDeCadeira.map((tipo) => (
               <li key={tipo.idtipocadeira}>
                 {tipo.nometipocadeira} - Disponíveis: {tipo.quantidadedisponiveis} - Preço: R$ {tipo.preco.toFixed(2)} - Meia-Entrada: {tipo.temmeia ? 'Sim' : 'Não'}
               </li>
