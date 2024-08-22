@@ -200,7 +200,7 @@ export default function EditShowPage() {
           />
         </div>
 
-        <h2>Adicionar Tipo de Cadeira</h2>
+        <h2>Adicionar um Tipo de Cadeira</h2>
         <div>
           <label>Nome do Tipo de Cadeira:</label>
           <input
