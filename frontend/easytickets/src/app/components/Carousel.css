@@ -1,0 +1,57 @@
+/* carousel.css */
+
+/* Define o contêiner principal com altura total da viewport menos a navbar */
+.carouselContainer {
+    position: relative;
+    margin-top: 60px; /* Espaço suficiente para a navbar */
+  }
+  
+  .carousel {
+    display: flex;
+ 
+    height: 100%; /* Altura completa do contêiner */
+    overflow: hidden;
+    position: relative;
+  }
+  
+  .carouselItem {
+    flex: none;
+    width: 100%; /* Largura total da tela */
+    height: 100%; /* Altura total da tela */
+    position: relative;
+  }
+  
+  .carouselItem img {
+    
+    object-fit: contain; /* Ajusta a imagem para caber no contêiner sem cortar */
+    display: block; /* Remove o espaço em branco abaixo da imagem */
+  }
+  
+  .controls {
+    display: flex;
+  justify-content: center; /* Centraliza os botões horizontalmente */
+  position: absolute;
+  bottom: 10px; /* Ajusta a distância do fundo */
+  width: 100%;
+  }
+  
+  .btn {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: white; /* Cor de fundo dos botões não ativos */
+    border: 2px solid rgb(2, 51, 127); /* Cor da borda dos botões não ativos */
+    cursor: pointer;
+    transition: background 0.3s, border 0.3s;
+  }
+  
+  .btn.active {
+    background: rgb(2, 51, 127); /* Cor de fundo para o botão ativo */
+    border: 2px solid rgb(2, 51, 127); /* Cor da borda para o botão ativo */
+  }
+  
+  .btn:hover {
+    background: rgba(2, 51, 127, 0.8); /* Cor de fundo ao passar o mouse */
+    border: 2px solid rgb(2, 51, 127); /* Mantém a cor da borda ao passar o mouse */
+  }
+  
