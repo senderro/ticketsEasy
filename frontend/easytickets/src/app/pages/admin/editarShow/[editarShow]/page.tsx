@@ -20,12 +20,12 @@ interface Show {
   datashow: string; // Use string para a data, pois o formato é ISO 8601
   artistas: string;
   destaque: boolean;
-  tiposDeCadeira: TipoDeCadeira[];
+  tiposdecadeira: TipoDeCadeira[];
 }
 
 export default function EditShowPage() {
   const router = useRouter();
-  const id = useParams().editarShow;
+  const editarShow = useParams().editarShow;
 
   const [show, setShow] = useState<Show>({
     idshow: 0,
@@ -34,14 +34,22 @@ export default function EditShowPage() {
     datashow: '',
     artistas: '',
     destaque: false,
-    tiposDeCadeira: [],
+    tiposdecadeira: [], // Inicializa como um array vazio
+  });
+
+  const [newTipoCadeira, setNewTipoCadeira] = useState<Omit<TipoDeCadeira, 'idtipocadeira' | 'idestrangeirashow'>>({
+    nometipocadeira: '',
+    quantidadedisponiveis: 0,
+    quantidadecompradas: 0,
+    preco: 0,
+    temmeia: false,
   });
 
   useEffect(() => {
     async function fetchShow() {
-      if (id) {
+      if (editarShow) {
         try {
-          const response = await fetch(`/api/shows/${id}`);
+          const response = await fetch(`/api/shows/${editarShow}`);
 
           if (response.ok) {
             const data: Show = await response.json();
@@ -55,7 +63,7 @@ export default function EditShowPage() {
       }
     }
     fetchShow();
-  }, [id]);
+  }, [editarShow]);
 
   const handleShowChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setShow({
@@ -68,7 +76,7 @@ export default function EditShowPage() {
     const { name, value, type, checked } = e.target;
     setShow({
       ...show,
-      tiposDeCadeira: show.tiposDeCadeira.map((tipo) =>
+      tiposdecadeira: show.tiposdecadeira.map((tipo) =>
         tipo.idtipocadeira === idTipoCadeira
           ? {
               ...tipo,
@@ -79,14 +87,40 @@ export default function EditShowPage() {
     });
   };
 
+  const handleNewTipoCadeiraChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value, type, checked } = e.target;
+    setNewTipoCadeira({
+      ...newTipoCadeira,
+      [name]: type === 'checkbox' ? checked : type === 'number' ? parseFloat(value) : value,
+    });
+  };
+
   const addTipoCadeira = () => {
-    // Lógica para adicionar um novo TipoDeCadeira, se necessário
+    setShow({
+      ...show,
+      tiposdecadeira: [
+        ...show.tiposdecadeira,
+        {
+          idtipocadeira: show.tiposdecadeira.length + 1,
+          idestrangeirashow: show.idshow, // Vincula o tipo de cadeira ao ID do show
+          ...newTipoCadeira,
+        },
+      ],
+    });
+
+    setNewTipoCadeira({
+      nometipocadeira: '',
+      quantidadedisponiveis: 0,
+      quantidadecompradas: 0,
+      preco: 0,
+      temmeia: false,
+    });
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const response = await fetch(`/api/shows/${id}`, {
+      const response = await fetch(`/api/shows/${editarShow}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -96,10 +130,9 @@ export default function EditShowPage() {
           datashow: new Date(show.datashow).toISOString(),
         }),
       });
-      console.log(response)
       if (response.ok) {
         console.log('Show atualizado com sucesso!');
-       // router.push('/admin/shows'); // Redireciona para a lista de shows ou página desejada
+        // router.push('/admin/shows'); // Redireciona para a lista de shows ou página desejada
       } else {
         console.error('Erro ao atualizar show:', response.statusText);
       }
@@ -167,62 +200,79 @@ export default function EditShowPage() {
           />
         </div>
 
-        <h2>Tipos de Cadeira</h2>
-        {show.tiposDeCadeira.map((tipo) => (
-          <div key={tipo.idtipocadeira}>
-            <h3>Tipo de Cadeira {tipo.idtipocadeira}</h3>
-            <div>
-              <label>Nome do Tipo de Cadeira:</label>
-              <input
-                type="text"
-                name="nometipocadeira"
-                value={tipo.nometipocadeira}
-                onChange={(e) => handleTipoCadeiraChange(e, tipo.idtipocadeira)}
-              />
-            </div>
+        <h2>Adicionar Tipo de Cadeira</h2>
+        <div>
+          <label>Nome do Tipo de Cadeira:</label>
+          <input
+            type="text"
+            name="nometipocadeira"
+            value={newTipoCadeira.nometipocadeira}
+            onChange={handleNewTipoCadeiraChange}
+          />
+        </div>
 
-            <div>
-              <label>Quantidade Disponíveis:</label>
-              <input
-                type="number"
-                name="quantidadedisponiveis"
-                value={tipo.quantidadedisponiveis}
-                onChange={(e) => handleTipoCadeiraChange(e, tipo.idtipocadeira)}
-              />
-            </div>
+        <div>
+          <label>Quantidade Disponíveis:</label>
+          <input
+            type="number"
+            name="quantidadedisponiveis"
+            value={newTipoCadeira.quantidadedisponiveis}
+            onChange={handleNewTipoCadeiraChange}
+          />
+        </div>
 
-            <div>
-              <label>Quantidade Compradas:</label>
-              <input
-                type="number"
-                name="quantidadecompradas"
-                value={tipo.quantidadecompradas}
-                onChange={(e) => handleTipoCadeiraChange(e, tipo.idtipocadeira)}
-              />
-            </div>
+        <div>
+          <label>Quantidade Compradas:</label>
+          <input
+            type="number"
+            name="quantidadecompradas"
+            value={newTipoCadeira.quantidadecompradas}
+            onChange={handleNewTipoCadeiraChange}
+          />
+        </div>
 
-            <div>
-              <label>Preço (em Reais):</label>
-              <input
-                type="number"
-                step="0.01"
-                name="preco"
-                value={tipo.preco}
-                onChange={(e) => handleTipoCadeiraChange(e, tipo.idtipocadeira)}
-              />
-            </div>
+        <div>
+          <label>Preço (em Reais):</label>
+          <input
+            type="number"
+            step="0.01"
+            name="preco"
+            value={newTipoCadeira.preco}
+            onChange={handleNewTipoCadeiraChange}
+          />
+        </div>
 
-            <div>
-              <label>Tem Meia-Entrada:</label>
-              <input
-                type="checkbox"
-                name="temmeia"
-                checked={tipo.temmeia}
-                onChange={(e) => handleTipoCadeiraChange(e, tipo.idtipocadeira)}
-              />
-            </div>
-          </div>
-        ))}
+        <div>
+          <label>Tem Meia-Entrada:</label>
+          <input
+            type="checkbox"
+            name="temmeia"
+            checked={newTipoCadeira.temmeia}
+            onChange={(e) =>
+              setNewTipoCadeira({
+                ...newTipoCadeira,
+                temmeia: e.target.checked,
+              })
+            }
+          />
+        </div>
+
+        <button type="button" onClick={addTipoCadeira}>
+          Adicionar Tipo de Cadeira
+        </button>
+
+        <h2>Tipos de Cadeira Adicionados:</h2>
+        <ul>
+          {show.tiposdecadeira && show.tiposdecadeira.length > 0 ? (
+            show.tiposdecadeira.map((tipo) => (
+              <li key={tipo.idtipocadeira}>
+                {tipo.nometipocadeira} - Disponíveis: {tipo.quantidadedisponiveis} - Preço: R$ {tipo.preco.toFixed(2)} - Meia-Entrada: {tipo.temmeia ? 'Sim' : 'Não'}
+              </li>
+            ))
+          ) : (
+            <li>Nenhum tipo de cadeira adicionado.</li>
+          )}
+        </ul>
 
         <button type="submit">Atualizar Show</button>
       </form>
