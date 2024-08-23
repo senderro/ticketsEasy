@@ -12,7 +12,6 @@ interface TipoDeCadeira {
   temmeia: boolean;
 }
 
-
 interface Show {
   idshow: number;
   nomeshow: string;
@@ -25,11 +24,10 @@ interface Show {
   ipfshash: string;
 }
 
-
 export default function EditShowPage() {
   const router = useRouter();
   const { editarShow } = useParams();
-  
+
   const [show, setShow] = useState<Show>({
     idshow: 0,
     nomeshow: '',
@@ -37,11 +35,11 @@ export default function EditShowPage() {
     datashow: '',
     artistas: '',
     destaque: false,
-    desativado: false,  // Valor inicial da nova coluna
+    desativado: false,
     tiposDeCadeira: [],
     ipfshash: '',
   });
-  
+
   const [newTipoCadeira, setNewTipoCadeira] = useState<Omit<TipoDeCadeira, 'idtipocadeira' | 'idestrangeirashow'>>({
     nometipocadeira: '',
     quantidadedisponiveis: 0,
@@ -130,6 +128,29 @@ export default function EditShowPage() {
     }
   };
 
+  const uploadImagem = async () => {
+    if (!newImageFile) return null;
+
+    const formData = new FormData();
+    formData.append('file', newImageFile);
+
+    try {
+      const response = await fetch('https://api.pinata.cloud/pinning/pinFileToIPFS', {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${process.env.NEXT_PUBLIC_PINATA_JWT}`,
+        },
+        body: formData,
+      });
+
+      const data = await response.json();
+      return data.IpfsHash; // Retornar apenas o hash da imagem
+    } catch (error) {
+      console.error('Erro ao fazer upload da imagem:', error);
+      return null;
+    }
+  };
+
   const handleImageDelete = async (cid: string) => {
     try {
       const token = process.env.NEXT_PUBLIC_PINATA_JWT;
@@ -153,39 +174,25 @@ export default function EditShowPage() {
       console.error('Error deleting image:', error);
     }
   };
-  
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     try {
       let newHash = show.ipfshash;
 
-      
       if (newImageFile) {
         // Faz o upload da nova imagem para o Pinata
-        const formData = new FormData();
-        formData.append('file', newImageFile);
+        const ipfsHash = await uploadImagem();
+        if (!ipfsHash) {
+          console.error('Falha no upload da imagem');
+          return;
+        }
+        newHash = ipfsHash;
 
-        const pinataResponse = await fetch('https://api.pinata.cloud/pinning/pinFileToIPFS', {
-          method: 'POST',
-          headers: {
-            Authorization: `Bearer ${process.env.NEXT_PUBLIC_PINATA_JWT}`,
-          },
-          body: formData,
-        });
-
-        if (pinataResponse.ok) {
-          const pinataData = await pinataResponse.json();
-          newHash = pinataData.IpfsHash; // Atualiza com o novo hash da imagem
-
-          // Delete the old image only after the new one is successfully uploaded
-          if (show.ipfshash) {
-            await handleImageDelete(show.ipfshash.split('/').pop() || '');
-          }
-        } else {
-          console.error('Erro ao fazer upload para o Pinata:', pinataResponse.statusText);
-          return; // Stop the submit process if upload fails
+        // Delete the old image only after the new one is successfully uploaded
+        if (show.ipfshash) {
+          await handleImageDelete(show.ipfshash.split('/').pop() || '');
         }
       }
 
@@ -204,6 +211,7 @@ export default function EditShowPage() {
 
       if (response.ok) {
         console.log('Show atualizado com sucesso!');
+        router.push('/shows'); // Redirecionar após atualização
       } else {
         console.error('Erro ao atualizar show:', response.statusText);
       }
@@ -217,10 +225,10 @@ export default function EditShowPage() {
     return isNaN(date.getTime()) ? '' : date.toISOString().split('T')[0];
   };
 
-
   const formatIpfsUrl = (hash: string, gateway: string = 'https://moccasin-quickest-mongoose-160.mypinata.cloud/ipfs/') => {
     return `${gateway}${hash}`;
   };
+
   return (
     <div>
       <h1>Editar Show</h1>
@@ -234,7 +242,7 @@ export default function EditShowPage() {
             onChange={handleShowChange}
           />
         </div>
-  
+
         <div>
           <label>Descrição:</label>
           <input
@@ -244,7 +252,7 @@ export default function EditShowPage() {
             onChange={handleShowChange}
           />
         </div>
-  
+
         <div>
           <label>Data do Show:</label>
           <input
@@ -254,7 +262,7 @@ export default function EditShowPage() {
             onChange={handleShowChange}
           />
         </div>
-  
+
         <div>
           <label>Artistas:</label>
           <input
@@ -264,7 +272,7 @@ export default function EditShowPage() {
             onChange={handleShowChange}
           />
         </div>
-  
+
         <div>
           <label>Destaque:</label>
           <input
@@ -275,7 +283,7 @@ export default function EditShowPage() {
           />
         </div>
         <div>
-          <label>Desativado:</label> {/* Novo campo de desativado */}
+          <label>Desativado:</label>
           <input
             type="checkbox"
             name="desativado"
@@ -283,132 +291,92 @@ export default function EditShowPage() {
             onChange={(e) => setShow({ ...show, desativado: e.target.checked })}
           />
         </div>
+
         <div>
-          <label>Imagem Atual:</label>
+          <label>Imagem:</label>
+          <input
+            type="file"
+            accept="image/*"
+            onChange={handleImageChange}
+          />
+        </div>
+
+        <div>
           {show.ipfshash && (
-            <div>
-              <img
-                src={formatIpfsUrl(show.ipfshash)}
-                alt="Imagem do Show"
-                width="200"
-              />
-            </div>
+            <img
+              src={formatIpfsUrl(show.ipfshash)}
+              alt="Imagem do Show"
+              style={{ maxWidth: '300px', maxHeight: '300px' }}
+            />
           )}
-          <input type="file" accept="image/*" onChange={handleImageChange} />
         </div>
-  
-        <h2>Adicionar um Tipo de Cadeira</h2>
+
         <div>
-          <label>Nome:</label>
-          <input
-            type="text"
-            name="nometipocadeira"
-            value={newTipoCadeira.nometipocadeira}
-            onChange={handleNewTipoCadeiraChange}
-          />
-        </div>
-  
-        <div>
-          <label>Quantidade Disponíveis:</label>
-          <input
-            type="number"
-            name="quantidadedisponiveis"
-            value={newTipoCadeira.quantidadedisponiveis}
-            onChange={handleNewTipoCadeiraChange}
-          />
-        </div>
-  
-        <div>
-          <label>Quantidade Compradas:</label>
-          <input
-            type="number"
-            name="quantidadecompradas"
-            value={newTipoCadeira.quantidadecompradas}
-            onChange={handleNewTipoCadeiraChange}
-          />
-        </div>
-  
-        <div>
-          <label>Preço:</label>
-          <input
-            type="number"
-            name="preco"
-            value={newTipoCadeira.preco}
-            onChange={handleNewTipoCadeiraChange}
-          />
-        </div>
-  
-        <div>
-          <label>Meia Entrada:</label>
-          <input
-            type="checkbox"
-            name="temmeia"
-            checked={newTipoCadeira.temmeia}
-            onChange={handleNewTipoCadeiraChange}
-          />
-        </div>
-  
-        <button type="button" onClick={addTipoCadeira}>Adicionar Tipo de Cadeira</button>
-  
-        <h2>Tipos de Cadeira Existentes</h2>
-        <ul>
+          <h2>Tipos de Cadeira</h2>
           {show.tiposDeCadeira.map((tipo) => (
-            <li key={tipo.idtipocadeira}>
-              <div>
-                <label>Nome:</label>
-                <input
-                  type="text"
-                  name="nometipocadeira"
-                  value={tipo.nometipocadeira}
-                  onChange={(e) => handleTipoCadeiraChange(e, tipo.idtipocadeira)}
-                />
-              </div>
-  
-              <div>
-                <label>Quantidade Disponíveis:</label>
-                <input
-                  type="number"
-                  name="quantidadedisponiveis"
-                  value={tipo.quantidadedisponiveis}
-                  onChange={(e) => handleTipoCadeiraChange(e, tipo.idtipocadeira)}
-                />
-              </div>
-  
-              <div>
-                <label>Quantidade Compradas:</label>
-                <input
-                  type="number"
-                  name="quantidadecompradas"
-                  value={tipo.quantidadecompradas}
-                  onChange={(e) => handleTipoCadeiraChange(e, tipo.idtipocadeira)}
-                />
-              </div>
-  
-              <div>
-                <label>Preço:</label>
-                <input
-                  type="number"
-                  name="preco"
-                  value={tipo.preco}
-                  onChange={(e) => handleTipoCadeiraChange(e, tipo.idtipocadeira)}
-                />
-              </div>
-  
-              <div>
-                <label>Meia Entrada:</label>
-                <input
-                  type="checkbox"
-                  name="temmeia"
-                  checked={tipo.temmeia}
-                  onChange={(e) => handleTipoCadeiraChange(e, tipo.idtipocadeira)}
-                />
-              </div>
-            </li>
+            <div key={tipo.idtipocadeira}>
+              <h3>{tipo.nometipocadeira}</h3>
+              <label>Quantidade Disponivel: {tipo.quantidadedisponiveis-tipo.quantidadecompradas}</label>
+              <br />
+              <label>Preço:</label>
+              <input
+                type="number"
+                name="preco"
+                value={tipo.preco}
+                onChange={(e) => handleTipoCadeiraChange(e, tipo.idtipocadeira)}
+              />
+              <br />
+              <label>Meia-Entrada:</label>
+              <input
+                type="checkbox"
+                name="temmeia"
+                checked={tipo.temmeia}
+                onChange={(e) => handleTipoCadeiraChange(e, tipo.idtipocadeira)}
+              />
+              <br />
+            </div>
           ))}
-        </ul>
-  
+
+          <div>
+            <h3>Adicionar Novo Tipo de Cadeira</h3>
+            <label>Nome do Tipo de Cadeira:</label>
+            <input
+              type="text"
+              name="nometipocadeira"
+              value={newTipoCadeira.nometipocadeira}
+              onChange={handleNewTipoCadeiraChange}
+            />
+            <br />
+            <label>Quantidade Disponível:</label>
+            <input
+              type="number"
+              name="quantidadedisponiveis"
+              value={newTipoCadeira.quantidadedisponiveis}
+              onChange={handleNewTipoCadeiraChange}
+            />
+            <br />
+            <label>Preço:</label>
+            <input
+              type="number"
+              name="preco"
+              value={newTipoCadeira.preco}
+              onChange={handleNewTipoCadeiraChange}
+            />
+            <br />
+            <label>Meia-Entrada:</label>
+            <input
+              type="checkbox"
+              name="temmeia"
+              checked={newTipoCadeira.temmeia}
+              onChange={handleNewTipoCadeiraChange}
+            />
+            <br />
+            <button type="button" onClick={addTipoCadeira}>Adicionar Tipo de Cadeira</button>
+          </div>
+        </div>
+
         <button type="submit">Salvar</button>
       </form>
     </div>
   );
-}  
+}
