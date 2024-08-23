@@ -3,7 +3,7 @@ import { NextResponse } from 'next/server';
 
 export async function POST(request: Request) {
   try {
-    const { nomeShow, descricao, dataShow, artistas, tiposDeCadeira } = await request.json();
+    const { nomeShow, descricao, dataShow, artistas, ipfshash, tiposDeCadeira, destaque, desativado } = await request.json();
 
     // Validação das informações do show
     if (!nomeShow || typeof nomeShow !== 'string' || nomeShow.trim() === '') {
@@ -16,6 +16,11 @@ export async function POST(request: Request) {
 
     if (!artistas || typeof artistas !== 'string' || artistas.trim() === '') {
       throw new Error('Pelo menos um artista é obrigatório e deve ser uma string válida.');
+    }
+
+    // Validação do URI da imagem
+    if (!ipfshash || typeof ipfshash !== 'string' || ipfshash.trim() === '') {
+      throw new Error('O URI da imagem é obrigatório e deve ser uma string válida.');
     }
 
     // Validação dos tipos de cadeira
@@ -37,11 +42,11 @@ export async function POST(request: Request) {
       }
     });
 
-    // Inserção do show na tabela
+    // Inserção do show na tabela, agora incluindo destaque e desativado
     const showResult = await sql`
-      INSERT INTO show (nomeShow, descricao, dataShow, artistas, destaque)
-      VALUES (${nomeShow}, ${descricao}, ${dataShow}, ${artistas}, false)
-      RETURNING idShow;
+      INSERT INTO show (nomeshow, descricao, datashow, artistas, ipfshash, destaque, desativado)
+      VALUES (${nomeShow}, ${descricao}, ${dataShow}, ${artistas}, ${ipfshash}, ${destaque}, ${desativado})
+      RETURNING idshow;
     `;
 
     const showId = showResult.rows[0].idshow;
@@ -49,13 +54,14 @@ export async function POST(request: Request) {
     // Inserção dos tipos de cadeira na tabela
     for (const tipo of tiposDeCadeira) {
       await sql`
-        INSERT INTO tipoCadeira (idEstrangeiraShow, nomeTipoCadeira, quantidadeDisponiveis, quantidadeCompradas, preco, temMeia)
+        INSERT INTO tipocadeira (idestrangeirashow, nometipocadeira, quantidadedisponiveis, quantidadecompradas, preco, temmeia)
         VALUES (${showId}, ${tipo.nomeTipoCadeira}, ${tipo.quantidadeDisponiveis}, ${tipo.quantidadeCompradas}, ${tipo.preco}, ${tipo.temMeia});
       `;
     }
 
     return NextResponse.json({ message: 'Show e tipos de cadeiras adicionados com sucesso!' }, { status: 200 });
   } catch (error) {
+    console.log(error);
     if (error instanceof Error) {
       return NextResponse.json({ error: error.message }, { status: 500 });
     } else {

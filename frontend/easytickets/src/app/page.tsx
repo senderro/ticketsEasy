@@ -1,14 +1,17 @@
 import React from 'react';
-import Navbar from './components/Navbar.'; // Ensure correct path and name
-import Carousel from './components/Carousel';
+import MyCarousel from './components/MyCarousel';
 
+import { EmblaOptionsType } from 'embla-carousel'
+
+const OPTIONS: EmblaOptionsType = {}
+const SLIDE_COUNT = 5
+const SLIDES = Array.from(Array(SLIDE_COUNT).keys())
 
 const Home: React.FC = () => {
   return (
-    <div>
-      <Navbar />
+    <div> 
       <main style={styles.mainContent as React.CSSProperties}>
-        <Carousel/>
+        <MyCarousel slides={SLIDES} options={OPTIONS} />
       </main>
     </div>
   );

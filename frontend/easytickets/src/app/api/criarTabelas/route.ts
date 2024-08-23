@@ -3,28 +3,29 @@ import { NextResponse } from 'next/server';
 
 export async function GET() {
   try {
-    // Cria a tabela "show"
+    // Cria a tabela "show" com o campo "ipfsHash"
     await sql`
       CREATE TABLE IF NOT EXISTS show (
-        idShow SERIAL PRIMARY KEY,
-        nomeShow VARCHAR(255) NOT NULL,
+        idshow SERIAL PRIMARY KEY,
+        nomeshow VARCHAR(255) NOT NULL,
         descricao VARCHAR(255),
-        dataShow DATE NOT NULL,
+        datashow DATE NOT NULL,
         artistas VARCHAR(255),
-        destaque BOOLEAN
+        destaque BOOLEAN,
+        ipfshash VARCHAR(255),
+        desativado BOOLEAN DEFAULT FALSE,
       );
     `;
 
-    // Cria a tabela "tipoCadeira"
     await sql`
       CREATE TABLE IF NOT EXISTS tipoCadeira (
-        idTipoCadeira SERIAL PRIMARY KEY,
-        idEstrangeiraShow INT REFERENCES show(idShow),
-        nomeTipoCadeira VARCHAR(255) NOT NULL,
-        quantidadeDisponiveis INT NOT NULL,
-        quantidadeCompradas INT DEFAULT 0,
+        idtipocadeira SERIAL PRIMARY KEY,
+        idestrangeirashow INT REFERENCES show(idShow),
+        nometipocadeira VARCHAR(255) NOT NULL,
+        quantidadedisponiveis INT NOT NULL,
+        quantidadecompradas INT DEFAULT 0,
         preco FLOAT NOT NULL,
-        temMeia BOOLEAN
+        temmeia BOOLEAN
       );
     `;
 
