@@ -1,15 +1,16 @@
 "use client";
 
 import React from 'react'
-import { EmblaOptionsType } from 'embla-carousel'
+import useEmblaCarousel, {
+  type UseEmblaCarouselType,
+} from "embla-carousel-react";
 import { DotButton, useDotButton } from './EmblaCarouselDotButton'
-import useEmblaCarousel from 'embla-carousel-react'
 
 import "./embla.css"
-
+type UseCarouselParameters = Parameters<typeof useEmblaCarousel>;
 type PropType = {
   slides: number[]
-  options?: EmblaOptionsType
+  options?: UseCarouselParameters[0];
 }
 
 const EmblaCarousel: React.FC<PropType> = (props) => {
