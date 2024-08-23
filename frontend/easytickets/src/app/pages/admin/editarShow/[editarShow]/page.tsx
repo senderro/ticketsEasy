@@ -132,7 +132,7 @@ export default function EditShowPage() {
 
   const handleImageDelete = async (cid: string) => {
     try {
-      const token = process.env.NEXT_PUBLIC_PINATA_JWT; // Substitua pelo seu token real do Pinata
+      const token = process.env.NEXT_PUBLIC_PINATA_JWT;
   
       const response = await fetch(`https://api.pinata.cloud/pinning/unpin/${cid}`, {
         method: 'DELETE',
@@ -161,7 +161,7 @@ export default function EditShowPage() {
     try {
       let newHash = show.ipfshash;
 
-      // Se uma nova imagem foi selecionada
+      
       if (newImageFile) {
         // Faz o upload da nova imagem para o Pinata
         const formData = new FormData();
