@@ -1,10 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 
-export const config = {
-  api: {
-    bodyParser: false, // Desativa o bodyParser padrão para lidar com FormData
-  },
-};
+export const dynamic = 'force-dynamic';
 
 const formidable = require('formidable');
 const fs = require('fs');
