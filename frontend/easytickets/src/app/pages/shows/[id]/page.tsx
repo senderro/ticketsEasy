@@ -56,7 +56,7 @@ export default function ShowDetailsPage() {
   const handleBuyTicket = async (tipoId: number) => {
     // Lógica para compra de ingresso (pode ser um POST para criar uma compra, etc.)
     console.log(`Compra do ingresso para o tipo ${tipoId}`);
-    // Redirect or show a success message after buying
+    // Redirect or show a success message after buyin
     router.push(`/purchase/${tipoId}`); // Exemplo de redirecionamento
   };
 
