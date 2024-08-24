@@ -1,0 +1,37 @@
+
+.show-details {
+    padding: 20px;
+    max-width: 800px;
+    margin: auto;
+  }
+  
+  .show-description {
+    margin-bottom: 20px;
+  }
+  
+  .ticket-types {
+    margin-top: 20px;
+  }
+  
+  .ticket-type {
+    border-bottom: 1px solid #ccc;
+    padding-bottom: 10px;
+    margin-bottom: 10px;
+  }
+  
+  .ticket-type h3 {
+    margin: 0 0 10px 0;
+  }
+  
+  .ticket-type button {
+    background-color: #0070f3;
+    color: white;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+  }
+  
+  .ticket-type button:hover {
+    background-color: #005bb5;
+  }
+  
