@@ -1,15 +1,14 @@
-import '@rainbow-me/rainbowkit/styles.css';
-import {
-  getDefaultConfig,
-} from '@rainbow-me/rainbowkit';
-import {
-  sepolia
-} from 'wagmi/chains';
+import { defineConfig } from "@wagmi/cli";
+import { hardhat } from "@wagmi/cli/plugins";
+import { react } from "@wagmi/cli/plugins";
 
-
-export const config = getDefaultConfig({
-    appName: 'My RainbowKit App',
-    projectId: 'YOUR_PROJECT_ID',
-    chains: [sepolia],
-    ssr: true, // If your dApp uses server side rendering (SSR)
-  });
+export default defineConfig({
+  out: "src/generated.ts",
+  contracts: [],
+  plugins: [
+    hardhat({
+      project: "../../hardhat",
+    }),
+    react(),
+  ],
+});
