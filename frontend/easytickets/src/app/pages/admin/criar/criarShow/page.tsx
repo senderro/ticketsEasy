@@ -1,5 +1,5 @@
 "use client"
-import { useState } from "react";
+import { ChangeEvent, useState } from "react";
 
 interface TipoDeCadeira {
   idTipoCadeira: number;
@@ -14,7 +14,7 @@ interface Show {
   idShow: number;
   nomeShow: string;
   descricao: string;
-  dataShow: Date;
+  dataShow: Date|null;
   artistas: string;
   tiposDeCadeira: TipoDeCadeira[];
   imagemURI: string;
@@ -50,6 +50,10 @@ export default function Home() {
       ...show,
       [name]: type === 'checkbox' ? checked : value,
     });
+  };
+
+  const handleDateChange = (event: ChangeEvent<HTMLInputElement>) => {    
+    setShow({...show,dataShow : event.target.value ? new Date(event.target.value) : null});
   };
 
   const handleTipoCadeiraChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -166,11 +170,11 @@ export default function Home() {
             type="date"
             name="dataShow"
             value={
-              show.dataShow instanceof Date
+              show.dataShow
                 ? show.dataShow.toISOString().split("T")[0]
-                : new Date(show.dataShow).toISOString().split("T")[0]
+                : ""
             }
-            onChange={handleShowChange}
+            onChange={handleDateChange}
           />
         </div>
 
