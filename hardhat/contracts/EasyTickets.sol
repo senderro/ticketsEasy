@@ -34,7 +34,6 @@ contract EasyTickets is ERC721, ERC721URIStorage, ERC721Burnable, Ownable {
     }
 
     function comprarIngresso(address to, string memory uri, uint256 precoingresso) payable public{
-        require(msg.value >= precoingresso, "Insufficient funds sent");
         safeMint(to,netId,uri);
 
 
@@ -46,7 +45,16 @@ contract EasyTickets is ERC721, ERC721URIStorage, ERC721Burnable, Ownable {
         return _userTokens[owner];
     }
 
+    function tokenURIsOfOwner(address owner) public view returns (string[] memory) {
+        uint256[] memory tokenIds = tokensOfOwner(owner);
+        string[] memory uris = new string[](tokenIds.length);
 
+        for (uint256 i = 0; i < tokenIds.length; i++) {
+            uris[i] = tokenURI(tokenIds[i]);
+        }
+
+        return uris;
+    }
     // As seguintes funções são sobrescritas conforme necessário pelo Solidity.
     function tokenURI(uint256 tokenId) public view override(ERC721, ERC721URIStorage) returns (string memory) {
         return super.tokenURI(tokenId);

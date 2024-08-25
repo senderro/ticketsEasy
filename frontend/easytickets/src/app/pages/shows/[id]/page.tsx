@@ -3,6 +3,12 @@
 import { useState, useEffect } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import "./showDetails.css";
+import { useAccount } from "wagmi";
+
+import { easyTicketsAbi } from '@/generated';
+import { useWriteEasyTicketsComprarIngresso } from '@/generated';
+import { ContractFunctionExecutionError, parseEther } from "viem";
+import { Address } from "viem";
 
 interface TipoDeCadeira {
   idtipocadeira: number;
@@ -31,6 +37,11 @@ export default function ShowDetailsPage() {
   const { id } = useParams();
   
   const [show, setShow] = useState<Show | null>(null);
+  const [ethPrice, setEthPrice] = useState<number>(0); // Guardar a taxa de conversão BRL para ETH
+
+  const { writeContractAsync, isSuccess, isError, isPending } = useWriteEasyTicketsComprarIngresso();
+
+  const { address: accountAddress } = useAccount();
 
   useEffect(() => {
     async function fetchShow() {
@@ -52,12 +63,89 @@ export default function ShowDetailsPage() {
     fetchShow();
   }, [id]);
 
-  const handleBuyTicket = async (tipoId: number) => {
-    console.log(`Compra do ingresso para o tipo ${tipoId}`);
-    router.push(`/purchase/${tipoId}`);
+  useEffect(() => {
+    // Buscar a taxa de conversão BRL -> ETH
+    async function fetchEthPrice() {
+      try {
+        const response = await fetch('https://min-api.cryptocompare.com/data/price?fsym=BRL&tsyms=ETH');
+        const data = await response.json();
+        setEthPrice(data.ETH);
+      } catch (error) {
+        console.error('Erro ao buscar taxa de conversão ETH:', error);
+      }
+    }
+    fetchEthPrice();
+  }, []);
+
+
+  const handleBuyTicket = async (tipoCad: TipoDeCadeira) => {
+    if (!ethPrice) {
+      console.error('Taxa de conversão ETH não disponível.');
+      return;
+    }
+  
+    const precoEmEth = tipoCad.preco * ethPrice*10**15; // Calculando o preço em ETH
+    const value = BigInt(Math.floor(precoEmEth)); 
+    if (show && tipoCad) { 
+    try{
+
+      const jsonHash = await uploadJsonToPinata(show, tipoCad);
+      if (jsonHash) {
+        console.log('JSON uploaded successfully, IPFS hash:', jsonHash);
+      }
+
+      await writeContractAsync({
+        address: "0xAf9f940E78f06DB60FA262EF283c31de141285d9" as `0x${string}`,
+        args: [accountAddress as `0x${string}`, jsonHash as string, BigInt(0)],
+        value: value, 
+      });
+
+    }catch(error){
+      if (error instanceof ContractFunctionExecutionError) {
+        const cause = error.cause
+        console.log(cause);
+      }
+    }
+  }
+  
+    console.log(precoEmEth);
+    console.log(parseEther(precoEmEth.toString()));
   };
 
+
+  const uploadJsonToPinata = async (show: Show, tipoCadeira: TipoDeCadeira) => {
+    const jsonData = {
+      name: show.nomeshow,
+      idShow: show.idshow,
+      description: show.descricao,
+      image: `https://moccasin-quickest-mongoose-160.mypinata.cloud/ipfs/${show.ipfshash}`,
+      tipocadeira: tipoCadeira.nometipocadeira,
+      datashow: show.datashow,
+      preco: tipoCadeira.preco,
+      meia: tipoCadeira.temmeia,
+    };
+  
+    try {
+      const response = await fetch('https://api.pinata.cloud/pinning/pinJSONToIPFS', {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${process.env.NEXT_PUBLIC_PINATA_JWT}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(jsonData),
+      });
+  
+      const data = await response.json();
+      return data.IpfsHash; // Retorna o hash IPFS do JSON
+    } catch (error) {
+      console.error('Erro ao fazer upload do JSON:', error);
+      return null;
+    }
+  };
+
+
   if (!show) return <div style={{ color: 'white' }}>Loading...</div>; // Texto branco para o estado de loading
+
 
   return (
     <div className="show-details">
@@ -77,7 +165,7 @@ export default function ShowDetailsPage() {
               <p><strong>Preço:</strong> R$ {tipo.preco.toFixed(2)}</p>
               <p><strong>Meia-Entrada:</strong> {tipo.temmeia ? 'Sim' : 'Não'}</p>
               {tipo.quantidadedisponiveis - tipo.quantidadecompradas > 0 ? (
-                <button onClick={() => handleBuyTicket(tipo.idtipocadeira)}>Comprar</button>
+                <button onClick={() => handleBuyTicket(tipo)}>Comprar</button>
               ) : (
                 <p>Ingressos esgotados</p>
               )}
