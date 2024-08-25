@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import Navbar from "./components/Navbar.";
-import { Providers } from "./providers";
+import MyWagmiProvider from "./providers";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -22,7 +22,7 @@ export default function RootLayout({
     
       <body className={inter.className}>
 
-      <Providers><Navbar/>{children}</Providers>
+      <MyWagmiProvider><Navbar/>{children}</MyWagmiProvider>
 
       </body>
     </html></>
