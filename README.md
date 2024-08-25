@@ -25,7 +25,7 @@ O ticketsEasy utiliza contratos inteligentes na blockchain para gerenciar a emis
 - **Carteira Digital**: Integração com carteiras digitais para facilitar transações.
 
 ## 💛 Deploy 💛
-[EasyTickets](https://tickets-easy-g4fsp4hxq-lorenzos-projects-b629ed80.vercel.app/pages/shows)
+[EasyTickets](https://tickets-easy-g4fsp4hxq-lorenzos-projects-b629ed80.vercel.app/)
 
   
 ## 🩵 Instalação e Uso 🩵
