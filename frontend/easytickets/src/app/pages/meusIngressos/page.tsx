@@ -16,6 +16,7 @@ const MyTickets: React.FC = () => {
     args: [accountAddress as `0x${string}`],
   });
 
+  
   useEffect(() => {
     if (result.data) {
       const fetchData = async () => {
