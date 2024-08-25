@@ -1,10 +1,10 @@
-# 🌈 TicketsEasy 🌈
+# 🌈 EasyTickets 🌈
 
-**ticketsEasy** é uma plataforma descentralizada para compra e venda de ingressos utilizando tecnologia blockchain. O projeto visa fornecer uma maneira segura, transparente e eficiente para transações de ingressos, eliminando problemas comuns como falsificações e intermediários.
+**EasyTickets** é uma plataforma descentralizada para compra e venda de ingressos utilizando tecnologia blockchain. O projeto visa fornecer uma maneira segura, transparente e eficiente para transações de ingressos, eliminando problemas comuns como falsificações e intermediários.
 
 ## 💜 Visão Geral 💜
 
-O ticketsEasy utiliza contratos inteligentes na blockchain para gerenciar a emissão e transferência de ingressos. Isso garante que todas as transações sejam seguras, imutáveis e verificáveis publicamente. A plataforma é projetada tanto para usuários finais, que compram e vendem ingressos, quanto para organizadores de eventos, que podem emitir e gerenciar a venda de seus ingressos de forma direta.
+O EasyTickets utiliza contratos inteligentes na blockchain para gerenciar a emissão e transferência de ingressos. Isso garante que todas as transações sejam seguras, imutáveis e verificáveis publicamente. A plataforma é projetada tanto para usuários finais, que compram e vendem ingressos, quanto para organizadores de eventos, que podem emitir e gerenciar a venda de seus ingressos de forma direta.
 
 ## 🩷 Tecnologias Utilizadas 🩷
 
