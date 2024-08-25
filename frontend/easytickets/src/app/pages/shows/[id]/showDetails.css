@@ -1,37 +1,52 @@
-
 .show-details {
-    padding: 20px;
-    max-width: 800px;
-    margin: auto;
-  }
-  
-  .show-description {
-    margin-bottom: 20px;
-  }
-  
-  .ticket-types {
-    margin-top: 20px;
-  }
-  
-  .ticket-type {
-    border-bottom: 1px solid #ccc;
-    padding-bottom: 10px;
-    margin-bottom: 10px;
-  }
-  
-  .ticket-type h3 {
-    margin: 0 0 10px 0;
-  }
-  
-  .ticket-type button {
-    background-color: #0070f3;
-    color: white;
-    border: none;
-    padding: 10px;
-    cursor: pointer;
-  }
-  
-  .ticket-type button:hover {
-    background-color: #005bb5;
-  }
-  
+  display: flex;
+  flex-direction: row; /* Coloca a imagem à direita */
+  padding: 20px;
+  max-width: 1200px;
+  margin: auto;
+  color: white; /* Torna todo o texto branco */
+}
+
+.show-details img {
+  width: 50%; /* Define a largura da imagem para ocupar metade do container */
+  max-height: 400px;
+  margin-left: 200px; /* Espaçamento entre a imagem e o texto */
+}
+
+.show-info {
+  flex: 1; /* O conteúdo textual ocupa o espaço restante */
+}
+
+.show-description {
+  margin-bottom: 20px;
+  color: white; /* Torna o texto da descrição branco */
+}
+
+.ticket-types {
+  margin-top: 20px;
+  color: white; /* Torna o texto dos tipos de ingressos branco */
+}
+
+.ticket-type {
+  border-bottom: 1px solid #ffffff; /* Linha divisória branca */
+  padding-bottom: 10px;
+  margin-bottom: 10px;
+  color: white; /* Torna o texto dentro dos tipos de ingressos branco */
+}
+
+.ticket-type h3 {
+  margin: 0 0 10px 0;
+  color: white; /* Torna os títulos dos tipos de ingressos brancos */
+}
+
+.ticket-type button {
+  background-color: #cb00f3;
+  color: white;
+  border: none;
+  padding: 10px;
+  cursor: pointer;
+}
+
+.ticket-type button:hover {
+  background-color: #ff00aa;
+}

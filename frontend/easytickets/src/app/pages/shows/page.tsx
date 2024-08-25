@@ -56,7 +56,7 @@ const ActiveShowsPage: React.FC = () => {
     <div>
       <FilterBar setFilters={setFilters} />
       {loading ? (
-        <p>Loading...</p>
+        <p style={{ color: 'white' }}>Loading...</p> 
       ) : (
         <div className="catalog-grid">
           {shows.map(show => (

@@ -12,6 +12,7 @@ export default function Navbar() {
       <div style={styles.navLinks}>
         <Link href="/pages/meusIngressos" style={styles.link}>Meus Ingressos</Link>
         <Link href="/pages/shows" style={styles.link}>Shows</Link>
+        <Link href="/pages/admin/criar/criarShow" style={styles.link}>Criar Show</Link>
       </div>
       <div style={styles.connectButton}>
         <ConnectButton/>

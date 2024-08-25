@@ -1,5 +1,5 @@
 import React from 'react';
-
+import { useRouter } from 'next/navigation';
 
 interface Show {
   idshow: number;
@@ -28,8 +28,14 @@ interface ShowCardProps {
 }
 
 const ShowCard: React.FC<ShowCardProps> = ({ show }) => {
+  const router = useRouter();
+
+  const handleCardClick = () => {
+    router.push(`/pages/shows/${show.idshow}`);
+  };
+
   return (
-    <div className="show-card">
+    <div className="show-card" onClick={handleCardClick} style={{ cursor: 'pointer' }}>
       <div className="show-card-image" style={{ backgroundImage: `url(https://gateway.pinata.cloud/ipfs/${show.ipfshash})` }}>
         <div className="show-card-overlay">
           <h3>{show.nomeshow}</h3>

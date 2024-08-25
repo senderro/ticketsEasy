@@ -1,5 +1,8 @@
-"use client"
-import { useState } from "react";
+"use client";
+
+import React, { useState } from "react";
+import Image from "next/image";
+import "./forms.css";  // Importa o arquivo forms.css
 
 interface TipoDeCadeira {
   idTipoCadeira: number;
@@ -137,143 +140,161 @@ export default function Home() {
   };
 
   return (
-    <div>
+    <div className="container">
       <h1>Criar Show</h1>
       <form onSubmit={handleSubmit}>
-        <div>
-          <label>Nome do Show:</label>
-          <input
-            type="text"
-            name="nomeShow"
-            value={show.nomeShow}
-            onChange={handleShowChange}
-          />
+        <div className="form-row">
+          <div className="block block1">
+            <div className="field">
+              <label>Nome do Show:</label>
+              <input
+                className="input"
+                type="text"
+                name="nomeShow"
+                value={show.nomeShow}
+                onChange={handleShowChange}
+              />
+            </div>
+
+            <div className="field">
+              <label>Descrição:</label>
+              <input
+                className="input"
+                type="text"
+                name="descricao"
+                value={show.descricao}
+                onChange={handleShowChange}
+              />
+            </div>
+
+            <div className="field">
+              <label>Data do Show:</label>
+              <input
+                className="input"
+                type="date"
+                name="dataShow"
+                value={
+                  show.dataShow instanceof Date
+                    ? show.dataShow.toISOString().split("T")[0]
+                    : new Date(show.dataShow).toISOString().split("T")[0]
+                }
+                onChange={handleShowChange}
+              />
+            </div>
+
+            <div className="field">
+              <label>Artistas:</label>
+              <input
+                className="input"
+                type="text"
+                name="artistas"
+                value={show.artistas}
+                onChange={handleShowChange}
+              />
+            </div>
+          </div>
+
+          <div className="block block2">
+            <div className="field">
+              <label>Desativado:</label>
+              <input
+                className="input"
+                type="checkbox"
+                name="desativado"
+                checked={show.desativado}
+                onChange={handleShowChange}
+              />
+            </div>
+            <div className="field">
+              <label>Destaque:</label>
+              <input
+                className="input"
+                type="checkbox"
+                name="destaque"
+                checked={show.destaque}
+                onChange={handleShowChange}
+              />
+            </div>
+
+            <h2>Adicionar Tipo de Cadeira</h2>
+            <div className="field">
+              <label>Nome do Tipo de Cadeira:</label>
+              <input
+                className="input"
+                type="text"
+                name="nomeTipoCadeira"
+                value={tipoCadeira.nomeTipoCadeira}
+                onChange={handleTipoCadeiraChange}
+              />
+            </div>
+
+            <div className="field">
+              <label>Quantidade Disponíveis:</label>
+              <input
+                className="input"
+                type="number"
+                name="quantidadeDisponiveis"
+                value={Math.floor(tipoCadeira.quantidadeDisponiveis)} 
+                onChange={handleTipoCadeiraChange}
+              />
+            </div>
+
+            <div className="field">
+              <label>Preço (em Reais):</label>
+              <input
+                className="input"
+                type="number"
+                step="0.01"
+                name="preco"
+                value={tipoCadeira.preco || ''}
+                onChange={handleTipoCadeiraChange}
+              />
+            </div>
+
+            <div className="field">
+              <label>Tem Meia-Entrada:</label>
+              <input
+                className="input"
+                type="checkbox"
+                name="temMeia"
+                checked={tipoCadeira.temMeia}
+                onChange={(e) =>
+                  setTipoCadeira({
+                    ...tipoCadeira,
+                    temMeia: e.target.checked,
+                  })
+                }
+              />
+            </div>
+
+            <button className="button" type="button" onClick={addTipoCadeira}>
+              Adicionar Tipo de Cadeira
+            </button>
+
+            <div>
+              <h3>Tipos de Cadeira Adicionados:</h3>
+              <ul>
+                {show.tiposDeCadeira.map((tipo, index) => (
+                  <li className="listItem" key={index}>
+                    {tipo.nomeTipoCadeira} - Disponíveis: {tipo.quantidadeDisponiveis} - Preço: R$ {tipo.preco ? tipo.preco.toFixed(2) : '0.00'} - Meia-Entrada: {tipo.temMeia ? "Sim" : "Não"}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
         </div>
 
-        <div>
-          <label>Descrição:</label>
-          <input
-            type="text"
-            name="descricao"
-            value={show.descricao}
-            onChange={handleShowChange}
-          />
-        </div>
-
-        <div>
-          <label>Data do Show:</label>
-          <input
-            type="date"
-            name="dataShow"
-            value={
-              show.dataShow instanceof Date
-                ? show.dataShow.toISOString().split("T")[0]
-                : new Date(show.dataShow).toISOString().split("T")[0]
-            }
-            onChange={handleShowChange}
-          />
-        </div>
-
-        <div>
-          <label>Artistas:</label>
-          <input
-            type="text"
-            name="artistas"
-            value={show.artistas}
-            onChange={handleShowChange}
-          />
-        </div>
-
-        <div>
-          <label>Desativado:</label> {/* Novo input para o campo desativado */}
-          <input
-            type="checkbox"
-            name="desativado"
-            checked={show.desativado}
-            onChange={handleShowChange}
-          />
-        </div>
-        <div>
-          <label>Destaque:</label> 
-          <input
-            type="checkbox"
-            name="destaque"
-            checked={show.destaque}
-            onChange={handleShowChange}
-          />
-        </div>
-        <h2>Adicionar Tipo de Cadeira</h2>
-        <div>
-          <label>Nome do Tipo de Cadeira:</label>
-          <input
-            type="text"
-            name="nomeTipoCadeira"
-            value={tipoCadeira.nomeTipoCadeira}
-            onChange={handleTipoCadeiraChange}
-          />
-        </div>
-
-        <div>
-          <label>Quantidade Disponíveis:</label>
-          <input
-            type="number"
-            name="quantidadeDisponiveis"
-            value={Math.floor(tipoCadeira.quantidadeDisponiveis)} 
-            onChange={handleTipoCadeiraChange}
-          />
-        </div>
-
-        <div>
-          <label>Preço (em Reais):</label>
-          <input
-            type="number"
-            step="0.01"
-            name="preco"
-            value={tipoCadeira.preco || ''}
-            onChange={handleTipoCadeiraChange}
-          />
-        </div>
-
-        <div>
-          <label>Tem Meia-Entrada:</label>
-          <input
-            type="checkbox"
-            name="temMeia"
-            checked={tipoCadeira.temMeia}
-            onChange={(e) =>
-              setTipoCadeira({
-                ...tipoCadeira,
-                temMeia: e.target.checked,
-              })
-            }
-          />
-        </div>
-
-        <button type="button" onClick={addTipoCadeira}>
-          Adicionar Tipo de Cadeira
-        </button>
-
-        <div>
-          <h3>Tipos de Cadeira Adicionados:</h3>
-          <ul>
-            {show.tiposDeCadeira.map((tipo, index) => (
-              <li key={index}>
-                {tipo.nomeTipoCadeira} - Disponíveis: {tipo.quantidadeDisponiveis} - Preço: R$ {tipo.preco ? tipo.preco.toFixed(2) : '0.00'} - Meia-Entrada: {tipo.temMeia ? "Sim" : "Não"}
-              </li>
-            ))}
-          </ul>
-        </div>
-
-        <div>
+        <div className="field">
           <label>Imagem do Show:</label>
           <input
+            className="input"
             type="file"
             accept="image/*"
             onChange={handleImagemChange}
           />
         </div>
 
-        <button type="submit">Criar Show</button>
+        <button className="button" type="submit">Criar Show</button>
       </form>
     </div>
   );
