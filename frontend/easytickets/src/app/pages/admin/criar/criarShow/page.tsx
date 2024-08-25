@@ -3,6 +3,8 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import "./forms.css";  // Importa o arquivo forms.css
+"use client"
+import { ChangeEvent, useState } from "react";
 
 interface TipoDeCadeira {
   idTipoCadeira: number;
@@ -17,7 +19,7 @@ interface Show {
   idShow: number;
   nomeShow: string;
   descricao: string;
-  dataShow: Date;
+  dataShow: Date|null;
   artistas: string;
   tiposDeCadeira: TipoDeCadeira[];
   imagemURI: string;
@@ -53,6 +55,10 @@ export default function Home() {
       ...show,
       [name]: type === 'checkbox' ? checked : value,
     });
+  };
+
+  const handleDateChange = (event: ChangeEvent<HTMLInputElement>) => {    
+    setShow({...show,dataShow : event.target.value ? new Date(event.target.value) : null});
   };
 
   const handleTipoCadeiraChange = (e: React.ChangeEvent<HTMLInputElement>) => {
