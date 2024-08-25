@@ -27,7 +27,6 @@ contract EasyTickets is ERC721, ERC721URIStorage, ERC721Burnable, Ownable {
 
     function safeMint(address to, uint256 tokenId, string memory uri)
         public
-        onlyOwner
     {
         _safeMint(to, tokenId);
         _setTokenURI(tokenId, uri);

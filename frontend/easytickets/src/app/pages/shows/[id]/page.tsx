@@ -95,7 +95,7 @@ export default function ShowDetailsPage() {
       }
 
       await writeContractAsync({
-        address: "0xAf9f940E78f06DB60FA262EF283c31de141285d9" as `0x${string}`,
+        address: "0xfA017a06b73adf0aB1725AA65f686d07d260446B" as `0x${string}`,
         args: [accountAddress as `0x${string}`, jsonHash as string, BigInt(0)],
         value: value, 
       });

@@ -12,7 +12,7 @@ const MyTickets: React.FC = () => {
   const result = useReadContract({
     abi: easyTicketsAbi,
     functionName: "tokenURIsOfOwner",
-    address: "0xAf9f940E78f06DB60FA262EF283c31de141285d9",
+    address: "0xfA017a06b73adf0aB1725AA65f686d07d260446B",
     args: [accountAddress as `0x${string}`],
   });
 
