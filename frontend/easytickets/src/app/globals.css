@@ -1,0 +1,12 @@
+body {
+    background-image: url('./pages/images/fundo.jpg');
+    background-size: cover;
+    background-position: center; 
+    background-repeat: no-repeat; 
+    background-attachment: fixed; 
+    margin: 0;
+    height: 100vh; 
+    width: 100vw; 
+    overflow: hidden; 
+    font-family: Arial, sans-serif; 
+}

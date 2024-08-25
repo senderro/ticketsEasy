@@ -61,32 +61,32 @@ const MyCarousel: React.FC = () => {
       forwardBtnProps={{
         style: {
           alignSelf: 'center',
-          background: 'black',
+          background: 'white',
           border: 'none',
           borderRadius: '50%',
-          color: 'white',
+          color: 'pink',
           cursor: 'pointer',
           fontSize: '30px',  // Aumenta o tamanho do botão
-          height: 50,  // Aumenta o tamanho do botão
+          height: 70,  // Aumenta o tamanho do botão
           lineHeight: 1,
           textAlign: 'center',
-          width: 50,  // Aumenta o tamanho do botão
+          width: 70,  // Aumenta o tamanho do botão
         },
         children: <span>{`>`}</span>,
       }}
       backwardBtnProps={{
         style: {
           alignSelf: 'center',
-          background: 'black',
+          background: 'white',
           border: 'none',
           borderRadius: '50%',
-          color: 'white',
+          color: 'pink',
           cursor: 'pointer',
           fontSize: '30px',  // Aumenta o tamanho do botão
-          height: 50,  // Aumenta o tamanho do botão
+          height: 70,  // Aumenta o tamanho do botão
           lineHeight: 1,
           textAlign: 'center',
-          width: 50,  // Aumenta o tamanho do botão
+          width: 70,  // Aumenta o tamanho do botão
         },
         children: <span>{`<`}</span>,
       }}

@@ -5,11 +5,13 @@ export default function Navbar() {
   return (
     <nav style={styles.navbar}>
       <div style={styles.logo}>
-        <h1>EasyTickets</h1>
+        <Link href="/" style={styles.logoLink}>
+          EasyTickets
+        </Link>
       </div>
       <div style={styles.navLinks}>
-        <Link href="/meusIngressos" style={styles.link}>Meus Ingressos</Link>
-        <Link href="/buscarShows" style={styles.link}>Buscar Shows</Link>
+        <Link href="/pages/meusIngressos" style={styles.link}>Meus Ingressos</Link>
+        <Link href="/pages/shows" style={styles.link}>Shows</Link>
       </div>
       <div style={styles.connectButton}>
         <ConnectButton/>
@@ -24,12 +26,22 @@ const styles = {
     justifyContent: 'space-between',
     alignItems: 'center',
     padding: '20px',
-    backgroundColor: '#333',
-    color: '#fff',
+    backgroundColor: 'transparent', // Fundo transparente
+    color: '#fff', // Texto branco
+    width: '100%', // Para ocupar toda a largura da tela
+    top: 0, // Fixa no topo da página
+    zIndex: 1000, // Garante que a navbar fique acima de outros elementos
   },
   logo: {
     fontSize: '24px',
     flex: 1,
+  },
+  logoLink: {
+    color: '#fff',
+    textDecoration: 'none',
+    fontSize: '48px',
+    fontWeight: 'bold',
+    
   },
   navLinks: {
     display: 'flex',
@@ -40,7 +52,11 @@ const styles = {
   link: {
     color: '#fff',
     textDecoration: 'none',
-    fontSize: '18px',
+    fontSize: '24px',
+    fontWeight: 'bold',
+    padding: '8px 16px',
+    borderRadius: '8px', // Letras arredondadas
+    backgroundColor: 'transparent', // Fundo transparente para os links também
   },
   connectButton: {
     display: 'flex',
