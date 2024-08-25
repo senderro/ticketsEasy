@@ -24,6 +24,10 @@ O EasyTickets utiliza contratos inteligentes na blockchain para gerenciar a emis
 - **Suporte a Vários Eventos**: Organizadores podem criar e gerenciar múltiplos eventos, cada um com sua própria emissão de ingressos.
 - **Carteira Digital**: Integração com carteiras digitais para facilitar transações.
 
+## 💚 Configure o DataBase 💚
+   
+- acesse DataBase_Config.md
+ 
 ## 💛 Deploy 💛
 [EasyTickets](https://tickets-easy-git-main-lorenzos-projects-b629ed80.vercel.app/)
 
@@ -55,9 +59,6 @@ Para rodar o projeto localmente, siga as instruções abaixo:
    npm start
 5. Abra http://localhost:3000 no seu navegador.
 
-6. Configure o DataBase 
-   ```bash
- acesse DataBase_Config.md para instruções
 
 ## 💙 Licença 💙
 Este projeto está licenciado sob a Licença MIT. Veja o arquivo LICENSE para mais detalhes.
