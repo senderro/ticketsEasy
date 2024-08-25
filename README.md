@@ -55,6 +55,10 @@ Para rodar o projeto localmente, siga as instruções abaixo:
    npm start
 5. Abra http://localhost:3000 no seu navegador.
 
+6. Configure o DataBase 
+   ```bash
+ acesse DataBase_Config.md para instruções
+
 ## 💙 Licença 💙
 Este projeto está licenciado sob a Licença MIT. Veja o arquivo LICENSE para mais detalhes.
 
