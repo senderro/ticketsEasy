@@ -29,7 +29,7 @@ O EasyTickets utiliza contratos inteligentes na blockchain para gerenciar a emis
 - acesse DataBase_Config.md
  
 ## 💛 Deploy 💛
-[EasyTickets](https://tickets-easy-git-main-lorenzos-projects-b629ed80.vercel.app/)
+[EasyTickets](https://vercel.live/link/tickets-easy-git-cara-lorenzos-projects-b629ed80.vercel.app?via=deployment-domains-list-branch)
 
   
 ## 🩵 Instalação e Uso 🩵
