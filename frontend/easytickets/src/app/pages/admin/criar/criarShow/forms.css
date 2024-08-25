@@ -1,37 +1,35 @@
 .container {
-  max-width: 600px;
+  max-width: 900px; /* Aumentar a largura máxima para acomodar duas colunas */
   margin: 0 auto;
   padding: 20px;
-  background-color: #ffffff;
   border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  color: #ffffff;
 }
 
-h1 {
-  text-align: center;
-  color: #000000;
-  margin-bottom: 1px;
+.form-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 200px; /* Espaço entre as colunas */
 }
 
-h2 {
-  text-align: center;
-  color: #000000;
-  margin-top: 1px;
+.column {
+  flex: 1;
+  min-width: 300px; /* Largura mínima para responsividade */
 }
 
 .field {
-  margin-bottom: auto;
+  margin-bottom: 20px;
 }
 
 label {
-  display: auto;
-  margin-bottom: 1px;
-  color: #000000;
+  display: block;
+  margin-bottom: 5px;
+  color: #ffffff;
 }
 
-.input {
+.input, input[type="date"], input[type="file"] {
   width: 100%;
-  padding: 5px;
+  padding: 8px;
   border: 1px solid #cccccc;
   border-radius: 4px;
   background-color: #ffffff;
@@ -48,6 +46,7 @@ label {
   cursor: pointer;
   text-align: center;
   transition: background-color 0.3s ease;
+  margin-top: 10px;
 }
 
 .button:hover {
@@ -61,5 +60,5 @@ label {
   border-radius: 4px;
   color: #333333;
   border: 1px solid #dddddd;
+  
 }
-

@@ -1,8 +1,7 @@
 "use client";
 
-import React, { useState } from "react";
-import Image from "next/image";
-import "./forms.css";  // Importa o arquivo forms.css
+import { ChangeEvent, useState } from "react";
+import "./forms.css"; // Certifique-se de que o caminho do CSS esteja correto
 
 interface TipoDeCadeira {
   idTipoCadeira: number;
@@ -17,7 +16,7 @@ interface Show {
   idShow: number;
   nomeShow: string;
   descricao: string;
-  dataShow: Date;
+  dataShow: Date | null;
   artistas: string;
   tiposDeCadeira: TipoDeCadeira[];
   imagemURI: string;
@@ -35,7 +34,7 @@ export default function Home() {
     tiposDeCadeira: [],
     imagemURI: "",
     desativado: false,
-    destaque: false, 
+    destaque: false,
   });
 
   const [tipoCadeira, setTipoCadeira] = useState<TipoDeCadeira>({
@@ -47,19 +46,26 @@ export default function Home() {
     temMeia: false,
   });
 
-  const handleShowChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleShowChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked } = e.target;
     setShow({
       ...show,
-      [name]: type === 'checkbox' ? checked : value,
+      [name]: type === "checkbox" ? checked : value,
     });
   };
 
-  const handleTipoCadeiraChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleDateChange = (event: ChangeEvent<HTMLInputElement>) => {
+    setShow({
+      ...show,
+      dataShow: event.target.value ? new Date(event.target.value) : null,
+    });
+  };
+
+  const handleTipoCadeiraChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked } = e.target;
     setTipoCadeira({
       ...tipoCadeira,
-      [name]: type === 'checkbox' ? checked : type === 'number' ? parseFloat(value) : value,
+      [name]: type === "checkbox" ? checked : type === "number" ? parseFloat(value) : value,
     });
   };
 
@@ -81,7 +87,7 @@ export default function Home() {
 
   const [imagem, setImagem] = useState<File | null>(null);
 
-  const handleImagemChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImagemChange = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
       setImagem(e.target.files[0]);
     }
@@ -91,11 +97,11 @@ export default function Home() {
     if (!imagem) return null;
 
     const formData = new FormData();
-    formData.append('file', imagem);
+    formData.append("file", imagem);
 
     try {
-      const response = await fetch('https://api.pinata.cloud/pinning/pinFileToIPFS', {
-        method: 'POST',
+      const response = await fetch("https://api.pinata.cloud/pinning/pinFileToIPFS", {
+        method: "POST",
         headers: {
           Authorization: `Bearer ${process.env.NEXT_PUBLIC_PINATA_JWT}`,
         },
@@ -103,39 +109,39 @@ export default function Home() {
       });
 
       const data = await response.json();
-      return data.IpfsHash; // Retornar apenas o hash da imagem
+      return data.IpfsHash;
     } catch (error) {
-      console.error('Erro ao fazer upload da imagem:', error);
+      console.error("Erro ao fazer upload da imagem:", error);
       return null;
     }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-  
-    const ipfsHash = await uploadImagem(); // Alterado aqui
-  
+
+    const ipfsHash = await uploadImagem();
+
     if (!ipfsHash) {
-      console.error('Falha no upload da imagem');
+      console.error("Falha no upload da imagem");
       return;
     }
-    
+
     try {
-      const response = await fetch('/api/criarShow', {
-        method: 'POST',
+      const response = await fetch("/api/criarShow", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({ ...show, ipfshash: ipfsHash }),
       });
-  
+
       if (response.ok) {
-        console.log('Show e tipos de cadeiras adicionados com sucesso!');
+        console.log("Show e tipos de cadeiras adicionados com sucesso!");
       } else {
-        console.error('Erro ao adicionar show');
+        console.error("Erro ao adicionar show");
       }
     } catch (error) {
-      console.error('Erro ao adicionar show:', error);
+      console.error("Erro ao adicionar show:", error);
     }
   };
 
@@ -144,7 +150,7 @@ export default function Home() {
       <h1>Criar Show</h1>
       <form onSubmit={handleSubmit}>
         <div className="form-row">
-          <div className="block block1">
+          <div className="column">
             <div className="field">
               <label>Nome do Show:</label>
               <input
@@ -173,12 +179,8 @@ export default function Home() {
                 className="input"
                 type="date"
                 name="dataShow"
-                value={
-                  show.dataShow instanceof Date
-                    ? show.dataShow.toISOString().split("T")[0]
-                    : new Date(show.dataShow).toISOString().split("T")[0]
-                }
-                onChange={handleShowChange}
+                value={show.dataShow ? show.dataShow.toISOString().split("T")[0] : ""}
+                onChange={handleDateChange}
               />
             </div>
 
@@ -192,9 +194,19 @@ export default function Home() {
                 onChange={handleShowChange}
               />
             </div>
+
+            <div className="field">
+              <label>Imagem do Show:</label>
+              <input
+                className="input"
+                type="file"
+                accept="image/*"
+                onChange={handleImagemChange}
+              />
+            </div>
           </div>
 
-          <div className="block block2">
+          <div className="column">
             <div className="field">
               <label>Desativado:</label>
               <input
@@ -205,6 +217,7 @@ export default function Home() {
                 onChange={handleShowChange}
               />
             </div>
+
             <div className="field">
               <label>Destaque:</label>
               <input
@@ -234,7 +247,7 @@ export default function Home() {
                 className="input"
                 type="number"
                 name="quantidadeDisponiveis"
-                value={Math.floor(tipoCadeira.quantidadeDisponiveis)} 
+                value={Math.floor(tipoCadeira.quantidadeDisponiveis)}
                 onChange={handleTipoCadeiraChange}
               />
             </div>
@@ -246,7 +259,7 @@ export default function Home() {
                 type="number"
                 step="0.01"
                 name="preco"
-                value={tipoCadeira.preco || ''}
+                value={tipoCadeira.preco || ""}
                 onChange={handleTipoCadeiraChange}
               />
             </div>
@@ -267,34 +280,24 @@ export default function Home() {
               />
             </div>
 
-            <button className="button" type="button" onClick={addTipoCadeira}>
+            <button type="button" className="button" onClick={addTipoCadeira}>
               Adicionar Tipo de Cadeira
             </button>
-
-            <div>
-              <h3>Tipos de Cadeira Adicionados:</h3>
-              <ul>
-                {show.tiposDeCadeira.map((tipo, index) => (
-                  <li className="listItem" key={index}>
-                    {tipo.nomeTipoCadeira} - Disponíveis: {tipo.quantidadeDisponiveis} - Preço: R$ {tipo.preco ? tipo.preco.toFixed(2) : '0.00'} - Meia-Entrada: {tipo.temMeia ? "Sim" : "Não"}
-                  </li>
-                ))}
-              </ul>
-            </div>
           </div>
         </div>
 
         <div className="field">
-          <label>Imagem do Show:</label>
-          <input
-            className="input"
-            type="file"
-            accept="image/*"
-            onChange={handleImagemChange}
-          />
+          <h3>Tipos de Cadeira Adicionados:</h3>
+          <ul>
+            {show.tiposDeCadeira.map((tipo, index) => (
+              <li key={index} className="listItem">
+                {tipo.nomeTipoCadeira} - Disponíveis: {tipo.quantidadeDisponiveis} - Preço: R$ {tipo.preco ? tipo.preco.toFixed(2) : '0.00'} - Meia-Entrada: {tipo.temMeia ? "Sim" : "Não"}
+              </li>
+            ))}
+          </ul>
         </div>
 
-        <button className="button" type="submit">Criar Show</button>
+        <button type="submit" className="button">Criar Show</button>
       </form>
     </div>
   );
