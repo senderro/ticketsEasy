@@ -129,7 +129,7 @@ export default function ShowDetailsPage() {
       const response = await fetch('https://api.pinata.cloud/pinning/pinJSONToIPFS', {
         method: 'POST',
         headers: {
-          Authorization: `Bearer ${process.env.NEXT_PUBLIC_PINATA_JWT}`,
+          Authorization: `Bearer ${"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySW5mb3JtYXRpb24iOnsiaWQiOiI1ZjI3MWE1MC1mZDhlLTQ5MGMtODFiNy1kZTBmZWNkMmM0NmIiLCJlbWFpbCI6ImxvcmVuem9oZW5yaXF1ZXBAZ21haWwuY29tIiwiZW1haWxfdmVyaWZpZWQiOnRydWUsInBpbl9wb2xpY3kiOnsicmVnaW9ucyI6W3siZGVzaXJlZFJlcGxpY2F0aW9uQ291bnQiOjEsImlkIjoiRlJBMSJ9LHsiZGVzaXJlZFJlcGxpY2F0aW9uQ291bnQiOjEsImlkIjoiTllDMSJ9XSwidmVyc2lvbiI6MX0sIm1mYV9lbmFibGVkIjpmYWxzZSwic3RhdHVzIjoiQUNUSVZFIn0sImF1dGhlbnRpY2F0aW9uVHlwZSI6InNjb3BlZEtleSIsInNjb3BlZEtleUtleSI6Ijg0MTg4YjMyOGE0NzIyMDhlMzcwIiwic2NvcGVkS2V5U2VjcmV0IjoiNGU1NGI3Mjc0M2M3NGRhMjkzZGUwNzQzMGM5ZDI0NDAzNWVjNmQ2Y2U2NjE0MTY4OTQ0ZWJiMjM5Y2RlNGY2YyIsImV4cCI6MTc1NTkwNTI1N30.tXU-pHwTsXGyQ7ZhqntnNn1-0-8UTPwfLoBsVlgOrZ4"}`,
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(jsonData),
